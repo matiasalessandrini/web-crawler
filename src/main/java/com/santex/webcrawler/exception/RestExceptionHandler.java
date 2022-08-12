@@ -1,4 +1,4 @@
-package com.santex.webcrawler.config.exception;
+package com.santex.webcrawler.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
