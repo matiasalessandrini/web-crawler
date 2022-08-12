@@ -1,0 +1,10 @@
+spring:
+    application:
+        name: web-crawler    
+             
+logging:
+  level:
+    root: INFO
+    '[org.springframework.web]': ERROR
+    '[com.santex.webcrawler.service]': DEBUG
+     
