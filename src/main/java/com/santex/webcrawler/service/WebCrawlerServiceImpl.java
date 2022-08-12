@@ -42,8 +42,8 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
 		if (page != null) {
 			if (!pageStatisticsDTO.getVisitedPages().contains(address)) {
 				pageStatisticsDTO.getVisitedPages().add(address);
-				page.getLinks().forEach(pageAddress -> CompletableFuture
-						.runAsync(() -> parse(pageAddress, pagesMap, pageStatisticsDTO, taskList)));
+				page.getLinks().forEach(pageAddress -> taskList.add(
+						CompletableFuture.runAsync(() -> parse(pageAddress, pagesMap, pageStatisticsDTO, taskList))));
 
 			} else {
 				pageStatisticsDTO.getSkippedPages().add(address);
