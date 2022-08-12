@@ -17,11 +17,18 @@ public class SwaggerConfig {
 	@Bean
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("com.santex.webcrawler")).build().apiInfo(apiInfo());
+				.apis(RequestHandlerSelectors
+				.basePackage("com.santex.webcrawler"))
+				.build()
+				.apiInfo(apiInfo());
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("WebCrawler API").description("WebCrawler API reference for developers")
-				.licenseUrl("https://santexgroup.com/").version("1.0").build();
+		return new ApiInfoBuilder()
+				.title("WebCrawler API")
+				.description("WebCrawler API reference for developers")
+				.licenseUrl("https://santexgroup.com/")
+				.version("1.0")
+				.build();
 	}
 }

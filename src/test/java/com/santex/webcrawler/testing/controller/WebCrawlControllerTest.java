@@ -1,7 +1,7 @@
 package com.santex.webcrawler.testing.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class WebCrawlControllerTest {
 	@Test
 	void testCanCrawlPage() throws Exception {
 		
-		MvcResult getStudentsResult = mockMvc.perform(get("/webcrawler/crawl?address=page-01")
+		MvcResult getStudentsResult = mockMvc.perform(post("/webcrawler/crawl?address=page-01")
 					.content(getRequestJSON())
 					.contentType(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
@@ -42,7 +42,7 @@ public class WebCrawlControllerTest {
 	@Test
 	void testInvalidParameter() throws Exception {
 
-		MvcResult getStudentsResult = mockMvc.perform(get("/webcrawler/crawl?address=")
+		MvcResult getStudentsResult = mockMvc.perform(post("/webcrawler/crawl?address=")
 					.content(getRequestJSON())
 					.contentType(MediaType.APPLICATION_JSON))
 					.andExpect(status().isBadRequest())
