@@ -1,7 +1,10 @@
 package com.santex.webcrawler.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,24 +23,27 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
 
 		Map<String, Page> pagesMap = iPages.getPages().stream()
 				.collect(Collectors.toMap(Page::getAddress, Function.identity()));
-		
+
 		Set<String> visitedPages = ConcurrentHashMap.newKeySet();
 		Set<String> skippedPages = ConcurrentHashMap.newKeySet();
 		Set<String> failedPages = ConcurrentHashMap.newKeySet();
 
+		List<CompletableFuture<Void>> taskList = new ArrayList<>();
 		PageStatisticsDTO pageStatisticsDTO = new PageStatisticsDTO(address, visitedPages, skippedPages, failedPages);
-		parse(address, pagesMap, pageStatisticsDTO);
+		parse(address, pagesMap, pageStatisticsDTO, taskList);
+		CompletableFuture.allOf(taskList.toArray(new CompletableFuture[taskList.size()])).join();
 		return pageStatisticsDTO;
 	}
 
-	private void parse(String address, Map<String, Page> pagesMap, PageStatisticsDTO pageStatisticsDTO) {
+	private void parse(String address, Map<String, Page> pagesMap, PageStatisticsDTO pageStatisticsDTO,
+			List<CompletableFuture<Void>> taskList) {
 
 		Page page = pagesMap.get(address);
 		if (page != null) {
 			if (!pageStatisticsDTO.getVisitedPages().contains(address)) {
 				pageStatisticsDTO.getVisitedPages().add(address);
-				page.getLinks().parallelStream()
-						.forEach(pageAddress -> parse(pageAddress, pagesMap, pageStatisticsDTO));
+				page.getLinks().forEach(pageAddress -> CompletableFuture
+						.runAsync(() -> parse(pageAddress, pagesMap, pageStatisticsDTO, taskList)));
 
 			} else {
 				pageStatisticsDTO.getSkippedPages().add(address);
