@@ -1,4 +1,4 @@
-package com.santex.webcrawler.config.exception;
+package com.santex.webcrawler.exception;
 
 import java.time.LocalDateTime;
 
