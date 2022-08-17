@@ -7,4 +7,11 @@ logging:
     root: INFO
     '[org.springframework.web]': ERROR
     '[com.santex.webcrawler.service]': DEBUG
+    
+management:
+  endpoints:
+    web:
+      exposure: 
+        include: beans, health
+ 
      

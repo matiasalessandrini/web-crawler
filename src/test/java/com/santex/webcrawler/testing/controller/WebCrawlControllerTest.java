@@ -31,7 +31,7 @@ public class WebCrawlControllerTest {
 		MvcResult getStudentsResult = mockMvc.perform(post("/webcrawler/crawl?address=page-01")
 					.content(getRequestJSON())
 					.contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isOk())
+					.andExpect(status().is2xxSuccessful())
 					.andReturn();
 
 		String contentAsString = getStudentsResult.getResponse().getContentAsString();
@@ -45,11 +45,11 @@ public class WebCrawlControllerTest {
 		MvcResult getStudentsResult = mockMvc.perform(post("/webcrawler/crawl?address=")
 					.content(getRequestJSON())
 					.contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isBadRequest())
+					.andExpect(status().is4xxClientError())
 					.andReturn();
 
 		String contentAsString = getStudentsResult.getResponse().getContentAsString();
-		assertThat(contentAsString).contains("Invalid parameter");
+		assertThat(contentAsString).contains("address: must not be blank");
 		
 	}
 	
