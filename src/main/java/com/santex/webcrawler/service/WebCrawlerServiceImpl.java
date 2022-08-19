@@ -34,8 +34,7 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
 
 		Page page = pagesMap.get(address);
 		if (page != null) {
-			if (!pageStatisticsDTO.getVisitedPages().contains(address)) {
-				pageStatisticsDTO.getVisitedPages().add(address);
+			if (pageStatisticsDTO.getVisitedPages().add(address)) {
 				page.getLinks().parallelStream()
 						.forEach(pageAddress -> parse(pageAddress, pagesMap, pageStatisticsDTO));
 
