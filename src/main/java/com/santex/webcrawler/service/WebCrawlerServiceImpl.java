@@ -3,6 +3,7 @@ package com.santex.webcrawler.service;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,26 +25,12 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
 		Set<String> visitedPages = ConcurrentHashMap.newKeySet();
 		Set<String> skippedPages = ConcurrentHashMap.newKeySet();
 		Set<String> failedPages = ConcurrentHashMap.newKeySet();
-
 		PageStatisticsDTO pageStatisticsDTO = new PageStatisticsDTO(address, visitedPages, skippedPages, failedPages);
-		parse(address, pagesMap, pageStatisticsDTO);
+		Crawler crawler = new Crawler(address, pagesMap, pageStatisticsDTO);
+		new ForkJoinPool().invoke(crawler);
 		return pageStatisticsDTO;
 	}
 
-	private void parse(String address, Map<String, Page> pagesMap, PageStatisticsDTO pageStatisticsDTO) {
-
-		Page page = pagesMap.get(address);
-		if (page != null) {
-			if (pageStatisticsDTO.getVisitedPages().add(address)) {
-				page.getLinks().parallelStream()
-						.forEach(pageAddress -> parse(pageAddress, pagesMap, pageStatisticsDTO));
-
-			} else {
-				pageStatisticsDTO.getSkippedPages().add(address);
-			}
-		} else {
-			pageStatisticsDTO.getFailedPages().add(address);
-		}
-	}
+	
 
 }
