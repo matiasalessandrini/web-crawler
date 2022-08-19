@@ -1,6 +1,7 @@
 package com.santex.webcrawler.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +28,8 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
 		Set<String> visitedPages = ConcurrentHashMap.newKeySet();
 		Set<String> skippedPages = ConcurrentHashMap.newKeySet();
 		Set<String> failedPages = ConcurrentHashMap.newKeySet();
-
-		List<CompletableFuture<Void>> taskList = new ArrayList<>();
+		List<CompletableFuture<Void>> taskList = Collections.synchronizedList(new ArrayList<>());
+		
 		PageStatisticsDTO pageStatisticsDTO = new PageStatisticsDTO(address, visitedPages, skippedPages, failedPages);
 		parse(address, pagesMap, pageStatisticsDTO, taskList);
 		CompletableFuture.allOf(taskList.toArray(new CompletableFuture[taskList.size()])).join();
